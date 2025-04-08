@@ -30,14 +30,37 @@ logger = logging.getLogger(__name__)
 def read_hdr_image(path):
     """Read HDR/EXR image and return as RGB float32 array"""
     try:
+        # Check if file exists
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"File not found: {path}")
+            
+        # Add .exr extension if not present
+        if not path.endswith('.exr'):
+            path = path + '.exr'
+            
+        logger.info(f"Reading image: {path}")
+        
+        # Try reading with OpenCV
         img = cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
-        if img is not None:
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float32)
-            if np.any(img < 0):
-                img = np.clip(img, 0, None)
-            return img
-        else:
+        
+        if img is None:
             raise ValueError(f"Failed to read image: {path}")
+            
+        logger.info(f"Image shape before conversion: {img.shape}")
+        
+        # Convert to RGB
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float32)
+        
+        logger.info(f"Image shape after conversion: {img.shape}")
+        logger.info(f"Image range: min={img.min():.3f}, max={img.max():.3f}")
+        
+        # Clip negative values
+        if np.any(img < 0):
+            img = np.clip(img, 0, None)
+            logger.info("Clipped negative values")
+            
+        return img
+        
     except Exception as e:
         logger.error(f"Error reading {path}: {e}")
         raise

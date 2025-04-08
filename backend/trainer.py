@@ -31,7 +31,7 @@ class HDRImageConfig:
     """Configuration for HDR image processing"""
     ref_folder: str
     dist_folder: str
-    batch_size: int = 10
+    batch_size: int = 2
     learning_rate: float = 1e-3
     weight_decay: float = 1e-4
     max_samples: Optional[int] = None
