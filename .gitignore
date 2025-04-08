@@ -58,4 +58,15 @@ checkpoints/
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Documentation
+*.pdf
+*.docx
+
+# Data directory
+narwaria/
+
+# Generated files
+*.png
+*.pyc 
